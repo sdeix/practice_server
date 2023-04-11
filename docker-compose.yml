@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  #Image for apache, php, node
+  web:
+    image: jurapro/flex-space:web-basic
+    build:
+      args:
+        SSH_USER: ${USER_LOGIN:-user}
+        SSH_PASS: ${USER_PASSWORD:-password}
+        LARAVEL: ${LARAVEL:-false}
+        YII: ${YII:-false}
+        VUE: ${VUE:-false}
+        REACT: ${REACT:-false}
+        ANGULAR: ${ANGULAR:-false}
+    environment:
+      - APACHE_RUN_USER=${USER_LOGIN:-user}
+      - APACHE_RUN_GROUP=${USER_LOGIN:-user}
+      - LC_CDPATH=/var/www/html
+    restart: always
+    container_name: ${USER_LOGIN:-user}_web
+    volumes:
+      - ./sshd_config:/etc/ssh/sshd_config
+    ports:
+      - ${SSH_PORT:-22}:22
+      - ${WEB_PORT:-8080}:80
