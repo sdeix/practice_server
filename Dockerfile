@@ -9,6 +9,7 @@ ARG ANGULAR
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
+    sudo \
     build-essential \
     libzip-dev \
     libpng-dev \
