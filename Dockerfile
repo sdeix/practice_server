@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
     curl
 
 # Install extensions
-RUN docker-php-ext-install pdo_mysql zip exif pcntl mysqli gd
+RUN docker-php-ext-install pdo_mysql pdo_pgsql zip exif pcntl mysqli gd
 
 #Install ssh
 RUN apt-get -y install --fix-missing openssh-server
