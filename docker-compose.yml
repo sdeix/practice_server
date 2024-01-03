@@ -1,26 +1,52 @@
 version: '3'
 
+networks:
+  default:
+    name: ${PROJECT_NAME:-project}-network
+    driver: bridge
+
+volumes:
+  db-dev:
+
 services:
-  #Image for apache, php, node
-  web:
-    image: jurapro/flex-space:web-basic
+  php:
     build:
+      context: ./
       args:
-        SSH_USER: ${USER_LOGIN:-user}
-        SSH_PASS: ${USER_PASSWORD:-password}
-        LARAVEL: ${LARAVEL:-false}
-        YII: ${YII:-false}
-        VUE: ${VUE:-false}
-        REACT: ${REACT:-false}
-        ANGULAR: ${ANGULAR:-false}
+        USER: ${USER:-user}
+        PASSWORD: ${PASSWORD:-password}
     environment:
-      - APACHE_RUN_USER=${USER_LOGIN:-user}
-      - APACHE_RUN_GROUP=${USER_LOGIN:-user}
+      - APACHE_RUN_USER=${USER:-user}
+      - APACHE_RUN_GROUP=${USER:-user}
       - LC_CDPATH=/var/www/html
-    restart: always
-    container_name: ${USER_LOGIN:-user}_web
+    restart: unless-stopped
+    container_name: ${PROJECT_NAME:-project}-php
     volumes:
-      - ./sshd_config:/etc/ssh/sshd_config
+      - ./:/var/www/html
     ports:
-      - ${SSH_PORT:-22}:22
-      - ${WEB_PORT:-8080}:80
+      - ${WEB_PORT:-10000}:80
+    depends_on:
+      - db
+  
+  db:
+    image: mariadb:10.7
+    restart: unless-stopped
+    container_name: ${PROJECT_NAME:-project}-db
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-db}
+      MYSQL_ROOT_PASSWORD: ${USER_DB_PASSWORD:-QWEasd123!}
+      MYSQL_USER: ${USER:-user}
+      MYSQL_PASSWORD: ${PASSWORD:-password}
+    volumes:
+      - db-dev:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    container_name: ${PROJECT_NAME:-project}-phpmyadmin
+    ports:
+      - ${WEB_PORT_PHPMYADMIN:-8888}:80
+    environment:
+      - PMA_HOST=db
+    depends_on:
+      - db
