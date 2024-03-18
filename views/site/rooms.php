@@ -1,3 +1,4 @@
+<div class="select">
 <form method="post">
    <p><select size="1" name="subdivision">
     <option value="">Все</option>
@@ -9,7 +10,7 @@
    </select></p>
    <p><input type="submit" value="Отправить"></p>
   </form>
-
+</div>
 <table class="table">
 <thead class="thead-dark">
   <tr>

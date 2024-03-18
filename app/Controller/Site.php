@@ -24,14 +24,11 @@ class Site
     }
 
 
-    public function hello(): string
-    {
-        return new View('site.hello', ['message' => 'hello working']);
-    }
+
     public function signup(Request $request): string
     {
         if ($request->method === 'POST' && User::create($request->all())) {
-            app()->route->redirect('/hello');
+            app()->route->redirect('/');
         }
         return new View('site.signup');
     }
@@ -43,7 +40,7 @@ class Site
         }
         //Если удалось аутентифицировать пользователя, то редирект
         if (Auth::attempt($request->all())) {
-            app()->route->redirect('/hello');
+            app()->route->redirect('/');
         }
         //Если аутентификация не удалась, то сообщение об ошибке
         return new View('site.login', ['message' => 'Неправильные логин или пароль']);
@@ -56,15 +53,19 @@ class Site
     }
 
 
-    public function admin(): string
+    public function admin(Request $request): string
     {
+        
         if (Auth::check()) {
             if (Auth::user()->role == 'admin') {
-                return new View('site.hello', ['message' => Auth::user()->role]);
+                if ($request->method === 'POST' && User::create($request->all())) {
+                    return new View('site.admin', ['message' => "Новый системный администратор создан"]);
+                }
+                return new View('site.admin');
             }
         }
 
-        app()->route->redirect('/hello');
+        app()->route->redirect('/abonents');
         return "";
 
     }
@@ -156,5 +157,6 @@ class Site
         $subdivisions = Subdivision::all();
         return (new View())->render('site.numbers', ['numbers' => $numbers, 'subdivisions' => $subdivisions, 'rooms' => $rooms, 'abonents' => $abonents]);
     }
+
 
 }

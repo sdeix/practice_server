@@ -11,9 +11,8 @@
 </head>
 <body>
 <header>
-   <nav>
+   <nav class="d-flex justify-content-between">
     <div>
-       <a href="<?= app()->route->getUrl('/hello') ?>">Главная</a>
        <?php
        if (!app()->auth::check()):
            ?>
