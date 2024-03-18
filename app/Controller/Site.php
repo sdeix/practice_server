@@ -111,5 +111,19 @@ class Site
        return (new View())->render('site.subdivisions', ['subdivisions' => $subdivisions]);
     }
 
+    public function rooms(Request $request): string
+    {
+        $rooms = Room::all();
+        $subdivisions = Subdivision::all();
+        if ($request->method === "POST") {
+            if($request->subdivision){
+                $rooms = Room::where('subdivision', $request->subdivision)->get();
+            }
+        }
+
+
+       return (new View())->render('site.rooms', ['rooms' => $rooms, 'subdivisions'=>$subdivisions]);
+    }
+
    
 }
