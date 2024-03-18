@@ -5,17 +5,18 @@
    <meta name="viewport"
          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <link rel="stylesheet" href="css/style.css">
    <title>Pop it MVC</title>
 </head>
 <body>
 <header>
    <nav>
+    <div>
        <a href="<?= app()->route->getUrl('/hello') ?>">Главная</a>
        <?php
        if (!app()->auth::check()):
            ?>
            <a href="<?= app()->route->getUrl('/login') ?>">Вход</a>
-           <a href="<?= app()->route->getUrl('/signup') ?>">Регистрация</a>
        <?php
        else:
            ?>
@@ -23,6 +24,26 @@
        <?php
        endif;
        ?>
+       </div>
+
+       <div class="b">
+       <?php
+
+       if (app()->auth::check() && app()->auth::user()->role=="admin"):
+           ?>
+           <a href="<?= app()->route->getUrl('/') ?>">Добавить нового системного администратора</a>
+       <?php
+       elseif(app()->auth::check()):
+           ?>
+           <a href="<?= app()->route->getUrl('/abonents') ?>">Абоненты</a>
+           <a href="<?= app()->route->getUrl('/numbers') ?>">Телефон</a>
+           <a href="<?= app()->route->getUrl('/rooms') ?>">Помещения</a>
+           <a href="<?= app()->route->getUrl('/subdivisions') ?>">Подразделения</a>
+       <?php
+       endif;
+       ?>
+       
+       </div>
    </nav>
 </header>
 <main>
