@@ -18,16 +18,19 @@
    <p><input type="submit" value="Отправить"></p>
   </form>
 
-<table style="width:100%">
+<table class="table">
+<thead class="thead-dark">
   <tr>
     <th>Фамилия</th>
     <th>Имя</th>
     <th>Отчество</th>
     <th>Дата рождения</th>
     <th>Подразделение</th>
+    <th>Помещения</th>
     <th>Номера</th>
   </tr>
-
+</thead>
+<tbody>
   <?php
  
   use Model\Number;
@@ -38,14 +41,20 @@
        echo '<th>' . $abonent->patronymic . '</th>';
        echo '<th>' . $abonent->dateofbirth . '</th>';
        echo '<th>' . $abonent->subdivision . '</th>';
-       echo '<th>';
        $numbers = Number::where('user',$abonent->id)->get();
+       echo '<th>';
        foreach ($numbers as $number) {
-        echo $number->number ;
+        echo $number->room. ' ' ;
+       }
+       echo '</th>';
+       echo '<th>';
+       foreach ($numbers as $number) {
+        echo $number->number. ' ' ;
        }
        echo '</th>';
    }
    ?>
+</tbody>
 </table>
 
 

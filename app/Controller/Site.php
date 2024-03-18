@@ -96,14 +96,20 @@ class Site
         }
 
 
-
-
        $numbers = Number::all();
        $subdivisions = Subdivision::all();
        $rooms = Room::all();
        return (new View())->render('site.abonents', ['abonents' => $abonents, 'numbers' => $numbers,'rooms' => $rooms,'subdivisions' => $subdivisions,'id' => $id]);
     }
    
+
+    public function subdivisions(Request $request): string
+    {
+        $subdivisions = Subdivision::all();
+       
+
+       return (new View())->render('site.subdivisions', ['subdivisions' => $subdivisions]);
+    }
 
    
 }
