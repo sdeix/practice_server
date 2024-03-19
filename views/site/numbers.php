@@ -1,5 +1,6 @@
 <div class="select">
 <form method="post">
+<input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>"/>
    <p><select size="1" name="subdivision">
     <option value="">Все</option>
     <?php

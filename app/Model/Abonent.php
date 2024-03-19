@@ -9,4 +9,5 @@ class Abonent extends Model
 {
    use HasFactory;
    public $timestamps = false;
+   protected $fillable = ['name','surname','patronymic','subdivision','dateofbirth'];
 }

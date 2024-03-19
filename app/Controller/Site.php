@@ -174,4 +174,14 @@ class Site
     }
 
 
+
+
+    public function createabonent(Request $request): string
+    {
+        if ($request->method === 'POST' && Abonent::create(['name'=>$request->name,'surname'=>$request->surname,'patronymic'=>$request->patronymic,'dateofbirth'=>$request->dateofbirth,'subdivision'=>$request->subdivision])) {
+            app()->route->redirect('/abonents');
+        }
+        return new View('site.abonents', ['message' => $request]);
+    }
+
 }
