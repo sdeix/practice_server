@@ -282,4 +282,19 @@ class Site
 
         return (new View())->render('site.createroom', ['message' => $message,'subdivisions' => $subdivisions]);
     }
+
+    public function addnumbertouser(Request $request): string
+    {
+
+        $abonents = Abonent::all();
+        $numbers = Number::all();
+        $message = '';
+        if($request->method === "POST"){
+            Number::where('number', $request->number)
+            ->update(['user' => $request->id]);
+            app()->route->redirect('/abonents');
+        }
+
+        return (new View())->render('site.addnumbertouser', ['message' => $message,'abonents' => $abonents, 'numbers'=>$numbers]);
+    }
 }

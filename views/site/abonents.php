@@ -54,6 +54,7 @@
       foreach ($numbers as $number) {
         echo $number->number . ' ';
       }
+      echo '<a href="'. app()->route->getUrl('/addnumbertouser'). '"><button>Добавитьь номер</button></a>';
       echo '</th>';
     }
     ?>
@@ -61,3 +62,6 @@
 </table>
 
 <a href="<?= app()->route->getUrl('/createabonent') ?>">Создать абонента</a>
+
+
+
