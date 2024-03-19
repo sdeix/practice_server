@@ -198,10 +198,11 @@ class Site
         $message = '';
         if($request->method === "POST"){
             $validator = new Validator($request->all(), [
-                'number' => ['required','unique:numbers,number'],
+                'number' => ['required','unique:numbers,number','isint'],
             ], [
                 'required' => 'Поле :field пусто',
-                'unique' => 'Поле :field должно быть уникально'
+                'unique' => 'Поле :field должно быть уникально',
+                'isint' =>"Номер должен быть числом"
             ]);
 
             if ($validator->fails()) {

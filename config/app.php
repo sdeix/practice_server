@@ -17,6 +17,7 @@ return [
  
    'validators' => [
     'required' => \Validators\RequireValidator::class,
-    'unique' => \Validators\UniqueValidator::class
+    'unique' => \Validators\UniqueValidator::class,
+    'isint' => \Validators\IsIntValidator::class
 ]
 ];
