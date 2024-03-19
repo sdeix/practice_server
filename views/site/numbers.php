@@ -40,12 +40,21 @@
 <tbody>
   <?php
    use Model\Room;
+   use Model\Abonent;
    foreach ($numbers as $number) {
         echo '  <tr>';
        echo '<th>' . $number->number . '</th>';
        echo '<th>' . $number->room . '</th>';
-       echo '<th>' . $number->user . '</th>';
 
+
+       if(count(Abonent::where('id',$number->user)->get())==1){
+        $abonent = Abonent::where('id',$number->user)->get();
+        echo '<th>' . $abonent[0]->name.' '.$abonent[0]->surname.' '.$abonent[0]->patronymic  . '</th>';
+       }
+       else{
+        echo '<th></th>';
+       }
+      
        $rooms = Room::where('roomname',$number->room)->get();
        echo '<th>' . $rooms[0]->subdivision . '</th>';
 
@@ -54,6 +63,5 @@
    ?>
 </tbody>
 </table>
-
 
 <a href="<?= app()->route->getUrl('/createnumber') ?>">Создать номер</a>
