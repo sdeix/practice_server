@@ -250,4 +250,35 @@ class Site
 
         return (new View())->render('site.createsubdivision', ['message' => $message]);
     }
+
+
+
+    public function createroom(Request $request): string
+    {
+        $subdivisions = Subdivision::all();
+        $message = '';
+        if($request->method === "POST"){
+            $validator = new Validator($request->all(), [
+                'roomname' => ['required','unique:rooms,roomname'],
+            ], [
+                'required' => 'Поле :field пусто',
+                'unique' => 'Поле :field должно быть уникально'
+            ]);
+
+            if ($validator->fails()) {
+                return new View(
+                    'site.createroom',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE),'subdivisions' => $subdivisions]
+                );
+            }
+            if ($request->roomname && $request->roomtype) {
+                if (Room::create(['roomname' => $request->roomname, 'roomtype' => $request->roomtype,'subdivision' => $request->subdivision])) {
+                    app()->route->redirect('/rooms');
+                }
+            }
+            $message = 'Заполните все поля';
+        }
+
+        return (new View())->render('site.createroom', ['message' => $message,'subdivisions' => $subdivisions]);
+    }
 }
