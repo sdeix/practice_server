@@ -13,6 +13,6 @@ Route::add(['GET', 'POST'], '/numbers', [Controller\Site::class, 'numbers'])   -
 Route::add(['GET', 'POST'], '/rooms', [Controller\Site::class, 'rooms'])   ->middleware('auth');
 Route::add(['GET', 'POST'], '/subdivisions', [Controller\Site::class, 'subdivisions'])   ->middleware('auth');
 
-Route::add('POST', '/createabonent', [Controller\Site::class, 'createabonent'])   ->middleware('auth');
-
+Route::add(['GET', 'POST'], '/createabonent', [Controller\Site::class, 'createabonent'])   ->middleware('auth');
+Route::add(['GET', 'POST'], '/createnumber', [Controller\Site::class, 'createnumber'])   ->middleware('auth');
 

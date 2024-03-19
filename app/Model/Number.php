@@ -9,4 +9,5 @@ class Number extends Model
 {
    use HasFactory;
    public $timestamps = false;
+   protected $fillable = ['number','room'];
 }

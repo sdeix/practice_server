@@ -55,7 +55,7 @@ class Site
 
     public function admin(Request $request): string
     {
-        
+
         if (Auth::check()) {
             if (Auth::user()->role == 'admin') {
                 if ($request->method === 'POST') {
@@ -67,12 +67,14 @@ class Site
                         'required' => 'Поле :field пусто',
                         'unique' => 'Поле :field должно быть уникально'
                     ]);
-             
-                    if($validator->fails()){
-                        return new View('site.admin',
-                            ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+
+                    if ($validator->fails()) {
+                        return new View(
+                            'site.admin',
+                            ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]
+                        );
                     }
-                    if(User::create($request->all())){
+                    if (User::create($request->all())) {
                         return new View('site.admin', ['message' => "Новый системный администратор создан"]);
                     }
                 }
@@ -152,8 +154,7 @@ class Site
                     if ($request->user) {
                         $numbers = Number::where('user', $request->user)->where('room', $request->room)->get();
                     }
-                }
-                else if ($request->user) {
+                } else if ($request->user) {
                     $numbers = Number::where('user', $request->user)->where('room', $rooms[0]->roomname)->get();
                 }
             } else if ($request->room) {
@@ -178,10 +179,31 @@ class Site
 
     public function createabonent(Request $request): string
     {
-        if ($request->method === 'POST' && Abonent::create(['name'=>$request->name,'surname'=>$request->surname,'patronymic'=>$request->patronymic,'dateofbirth'=>$request->dateofbirth,'subdivision'=>$request->subdivision])) {
-            app()->route->redirect('/abonents');
+        $message = '';
+        if($request->method === "POST"){
+            if ($request->name && $request->surname && $request->patronymic && $request->dateofbirth && $request->subdivision) {
+                if (Abonent::create(['name' => $request->name, 'surname' => $request->surname, 'patronymic' => $request->patronymic, 'dateofbirth' => $request->dateofbirth, 'subdivision' => $request->subdivision])) {
+                    app()->route->redirect('/abonents');
+                }
+            }
+            $message = 'Заполните все поля';
         }
-        return new View('site.abonents', ['message' => $request]);
+        $subdivisions = Subdivision::all();
+        return (new View())->render('site.createabonent', ['message' => $message,'subdivisions' => $subdivisions]);
     }
 
+    public function createnumber(Request $request): string
+    {
+        $message = '';
+        if($request->method === "POST"){
+            if ($request->number && $request->room) {
+                if (Number::create(['number' => $request->number, 'room' => $request->room])) {
+                    app()->route->redirect('/numbers');
+                }
+            }
+            $message = 'Заполните все поля';
+        }
+        $rooms = Room::all();
+        return (new View())->render('site.createnumber', ['message' => $message,'rooms' => $rooms]);
+    }
 }
