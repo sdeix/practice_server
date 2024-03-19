@@ -194,8 +194,22 @@ class Site
 
     public function createnumber(Request $request): string
     {
+        $rooms = Room::all();
         $message = '';
         if($request->method === "POST"){
+            $validator = new Validator($request->all(), [
+                'number' => ['required','unique:numbers,number'],
+            ], [
+                'required' => 'Поле :field пусто',
+                'unique' => 'Поле :field должно быть уникально'
+            ]);
+
+            if ($validator->fails()) {
+                return new View(
+                    'site.createnumber',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE),'rooms' => $rooms]
+                );
+            }
             if ($request->number && $request->room) {
                 if (Number::create(['number' => $request->number, 'room' => $request->room])) {
                     app()->route->redirect('/numbers');
@@ -203,7 +217,37 @@ class Site
             }
             $message = 'Заполните все поля';
         }
-        $rooms = Room::all();
+
         return (new View())->render('site.createnumber', ['message' => $message,'rooms' => $rooms]);
+    }
+
+
+    public function createsubdivision(Request $request): string
+    {
+        $message = '';
+        if($request->method === "POST"){
+            $validator = new Validator($request->all(), [
+                'subdivisionname' => ['required','unique:subdivisions,subdivisionname'],
+                'subdivisiontype' => ['required'],
+            ], [
+                'required' => 'Поле :field пусто',
+                'unique' => 'Поле :field должно быть уникально'
+            ]);
+
+            if ($validator->fails()) {
+                return new View(
+                    'site.createsubdivision',
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]
+                );
+            }
+            if ($request->subdivisionname && $request->subdivisiontype) {
+                if (Subdivision::create(['subdivisionname' => $request->subdivisionname, 'subdivisiontype' => $request->subdivisiontype])) {
+                    app()->route->redirect('/subdivisions');
+                }
+            }
+            $message = 'Заполните все поля';
+        }
+
+        return (new View())->render('site.createsubdivision', ['message' => $message]);
     }
 }

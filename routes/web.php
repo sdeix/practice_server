@@ -15,4 +15,6 @@ Route::add(['GET', 'POST'], '/subdivisions', [Controller\Site::class, 'subdivisi
 
 Route::add(['GET', 'POST'], '/createabonent', [Controller\Site::class, 'createabonent'])   ->middleware('auth');
 Route::add(['GET', 'POST'], '/createnumber', [Controller\Site::class, 'createnumber'])   ->middleware('auth');
+Route::add(['GET', 'POST'], '/createsubdivision', [Controller\Site::class, 'createsubdivision'])   ->middleware('auth');
+Route::add(['GET', 'POST'], '/createroom', [Controller\Site::class, 'createroom'])   ->middleware('auth');
 

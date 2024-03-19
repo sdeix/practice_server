@@ -21,3 +21,4 @@
 </table>
 
 
+<a href="<?= app()->route->getUrl('/createsubdivision') ?>">Создать подразделение</a>

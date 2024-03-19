@@ -9,4 +9,5 @@ class Subdivision extends Model
 {
    use HasFactory;
    public $timestamps = false;
+   protected $fillable = ['subdivisionname','subdivisiontype'];
 }

@@ -28,3 +28,12 @@ nav{
 h2{
     text-align: center;
 }
+h1{
+    text-align: center;
+}
+.create{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+}
