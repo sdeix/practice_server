@@ -8,7 +8,7 @@ use Model\Number;
 use Model\Room;
 use Model\Subdivision;
 
-
+use Src\Validator\Validator;
 use Src\View;
 use Src\Request;
 use Model\User;
@@ -58,8 +58,23 @@ class Site
         
         if (Auth::check()) {
             if (Auth::user()->role == 'admin') {
-                if ($request->method === 'POST' && User::create($request->all())) {
-                    return new View('site.admin', ['message' => "Новый системный администратор создан"]);
+                if ($request->method === 'POST') {
+                    $validator = new Validator($request->all(), [
+                        'name' => ['required'],
+                        'login' => ['required', 'unique:users,login'],
+                        'password' => ['required']
+                    ], [
+                        'required' => 'Поле :field пусто',
+                        'unique' => 'Поле :field должно быть уникально'
+                    ]);
+             
+                    if($validator->fails()){
+                        return new View('site.admin',
+                            ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+                    }
+                    if(User::create($request->all())){
+                        return new View('site.admin', ['message' => "Новый системный администратор создан"]);
+                    }
                 }
                 return new View('site.admin');
             }
