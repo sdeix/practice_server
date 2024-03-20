@@ -15,6 +15,7 @@ use Model\User;
 use Src\Auth\Auth;
 use Illuminate\Database\Capsule\Manager as DB;
 
+use function Image\image;
 class Site
 {
     public function index(Request $request): string
@@ -278,15 +279,16 @@ class Site
             }
             if ($request->roomname && $request->roomtype) {
                 $uploadfile= '';
-                if($request->image['size']>0){
-                    $uploaddir = '../public/images/';
-                    $uploadfile = $uploaddir . basename($request->image['name']);
-                    if (move_uploaded_file($request->image['tmp_name'], $uploadfile)) {
-                        $img = $uploadfile;
-                    }
-                }
+                // if($request->image['size']>0){
+                //     $uploaddir = '../public/images/';
+                //     $uploadfile = $uploaddir . basename($request->image['name']);
+                //     if (move_uploaded_file($request->image['tmp_name'], $uploadfile)) {
+                //         $img = $uploadfile;
+                //     }
+                // }
+               $img = image($request->image)->img($request->image);
                
-                if (Room::create(['roomname' => $request->roomname, 'roomtype' => $request->roomtype,'subdivision' => $request->subdivision,'image' => $uploadfile])) {
+                if (Room::create(['roomname' => $request->roomname, 'roomtype' => $request->roomtype,'subdivision' => $request->subdivision,'image' => $img])) {
                     app()->route->redirect('/rooms');
                 }
             }
