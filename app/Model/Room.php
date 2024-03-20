@@ -9,5 +9,5 @@ class Room extends Model
 {
    use HasFactory;
    public $timestamps = false;
-   protected $fillable = ['roomname','roomtype','subdivision'];
+   protected $fillable = ['roomname','roomtype','subdivision','image'];
 }

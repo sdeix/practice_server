@@ -1,9 +1,10 @@
 <div>
   <h1>Создать помещение</h1>
   <?php
-  echo $message ?? '';
+  print_r($message)
+
   ?>
-  <form class="create" action="createroom" method="post">
+  <form enctype="multipart/form-data" class="create" action="createroom" method="post">
     <input name="csrf_token" type="hidden" value="<?= app()->auth::generateCSRF() ?>" />
     <label for="roomname">Название помещения</label>
     <input name="roomname" type="text">
@@ -17,6 +18,7 @@
         }
         ?>
       </select></p>
+      <input type="file" name="image">
       <button>Создать помещение</button>
   </form>
 </div>

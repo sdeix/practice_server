@@ -18,6 +18,7 @@
     <th>Название</th>
     <th>Вид</th>
     <th>Подразделение</th>
+    <th>Изображение</th>
   </tr>
 </thead>
 <tbody>
@@ -28,6 +29,7 @@
        echo '<th>' . $room->roomname . '</th>';
        echo '<th>' . $room->roomtype . '</th>';
        echo '<th>' . $room->subdivision . '</th>';
+       echo '<th class="imgth"><img class="img "src="' . $room->image . '"></th>';
    }
    ?>
 </tbody>

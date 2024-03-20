@@ -277,7 +277,16 @@ class Site
                 );
             }
             if ($request->roomname && $request->roomtype) {
-                if (Room::create(['roomname' => $request->roomname, 'roomtype' => $request->roomtype,'subdivision' => $request->subdivision])) {
+                $uploadfile= '';
+                if($request->image['size']>0){
+                    $uploaddir = '../public/images/';
+                    $uploadfile = $uploaddir . basename($request->image['name']);
+                    if (move_uploaded_file($request->image['tmp_name'], $uploadfile)) {
+                        $img = $uploadfile;
+                    }
+                }
+               
+                if (Room::create(['roomname' => $request->roomname, 'roomtype' => $request->roomtype,'subdivision' => $request->subdivision,'image' => $uploadfile])) {
                     app()->route->redirect('/rooms');
                 }
             }
