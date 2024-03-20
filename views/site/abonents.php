@@ -17,6 +17,7 @@
         }
         ?>
       </select></p>
+      <p><input type="text" name="name" placeholder="Имя"></p>
     <p><input type="submit" value="Отправить"></p>
   </form>
 </div>

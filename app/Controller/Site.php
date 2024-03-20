@@ -92,6 +92,7 @@ class Site
         $abonents = Abonent::all();
         $id = 0;
         if ($request->method === "POST") {
+
             if ($request->subdivision) {
                 $abonents = Abonent::where('subdivision', $request->subdivision)->get();
                 if ($request->room) {
@@ -106,6 +107,9 @@ class Site
                 foreach ($id as $i) {
                     $abonents = Abonent::where('id', $i->user)->get();
                 }
+
+            }else if ($request->name) {
+                    $abonents = Abonent::where('name', $request->name)->get();
 
             }
         }
