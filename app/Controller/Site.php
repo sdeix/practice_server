@@ -13,9 +13,11 @@ use Src\View;
 use Src\Request;
 use Model\User;
 use Src\Auth\Auth;
-use Illuminate\Database\Capsule\Manager as DB;
+
+use \Firebase\JWT\JWT;
 
 use function Image\image;
+
 class Site
 {
     public function index(Request $request): string
@@ -75,8 +77,11 @@ class Site
                             ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]
                         );
                     }
-                    if (User::create($request->all())) {
-                        
+                    $key = "securitykey";
+                    $payload = [$request->login,$request->name];
+                    $token = JWT::encode($payload, $key,"HS256");
+                    if (User::create(['name' => $request->name, 'login' => $request->login, 'password'=>$request->password,"token"=> $token])) {
+  
                         return new View('site.admin', ['message' => "Новый системный администратор создан"]);
                     }
                 }
@@ -110,8 +115,8 @@ class Site
                     $abonents = Abonent::where('id', $i->user)->get();
                 }
 
-            }else if ($request->name) {
-                    $abonents = Abonent::where('name', $request->name)->get();
+            } else if ($request->name) {
+                $abonents = Abonent::where('name', $request->name)->get();
 
             }
         }
@@ -186,7 +191,7 @@ class Site
     public function createabonent(Request $request): string
     {
         $message = '';
-        if($request->method === "POST"){
+        if ($request->method === "POST") {
             if ($request->name && $request->surname && $request->patronymic && $request->dateofbirth && $request->subdivision) {
                 if (Abonent::create(['name' => $request->name, 'surname' => $request->surname, 'patronymic' => $request->patronymic, 'dateofbirth' => $request->dateofbirth, 'subdivision' => $request->subdivision])) {
                     app()->route->redirect('/abonents');
@@ -195,26 +200,26 @@ class Site
             $message = 'Заполните все поля';
         }
         $subdivisions = Subdivision::all();
-        return (new View())->render('site.createabonent', ['message' => $message,'subdivisions' => $subdivisions]);
+        return (new View())->render('site.createabonent', ['message' => $message, 'subdivisions' => $subdivisions]);
     }
 
     public function createnumber(Request $request): string
     {
         $rooms = Room::all();
         $message = '';
-        if($request->method === "POST"){
+        if ($request->method === "POST") {
             $validator = new Validator($request->all(), [
-                'number' => ['required','unique:numbers,number','isint'],
+                'number' => ['required', 'unique:numbers,number', 'isint'],
             ], [
                 'required' => 'Поле :field пусто',
                 'unique' => 'Поле :field должно быть уникально',
-                'isint' =>"Номер должен быть числом"
+                'isint' => "Номер должен быть числом"
             ]);
 
             if ($validator->fails()) {
                 return new View(
                     'site.createnumber',
-                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE),'rooms' => $rooms]
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'rooms' => $rooms]
                 );
             }
             if ($request->number && $request->room) {
@@ -225,16 +230,16 @@ class Site
             $message = 'Заполните все поля';
         }
 
-        return (new View())->render('site.createnumber', ['message' => $message,'rooms' => $rooms]);
+        return (new View())->render('site.createnumber', ['message' => $message, 'rooms' => $rooms]);
     }
 
 
     public function createsubdivision(Request $request): string
     {
         $message = '';
-        if($request->method === "POST"){
+        if ($request->method === "POST") {
             $validator = new Validator($request->all(), [
-                'subdivisionname' => ['required','unique:subdivisions,subdivisionname'],
+                'subdivisionname' => ['required', 'unique:subdivisions,subdivisionname'],
                 'subdivisiontype' => ['required'],
             ], [
                 'required' => 'Поле :field пусто',
@@ -259,7 +264,7 @@ class Site
 
             $message = 'Заполните все поля';
         }
- 
+
         return (new View())->render('site.createsubdivision', ['message' => $message]);
     }
 
@@ -269,9 +274,9 @@ class Site
     {
         $subdivisions = Subdivision::all();
         $message = '';
-        if($request->method === "POST"){
+        if ($request->method === "POST") {
             $validator = new Validator($request->all(), [
-                'roomname' => ['required','unique:rooms,roomname'],
+                'roomname' => ['required', 'unique:rooms,roomname'],
             ], [
                 'required' => 'Поле :field пусто',
                 'unique' => 'Поле :field должно быть уникально'
@@ -280,11 +285,11 @@ class Site
             if ($validator->fails()) {
                 return new View(
                     'site.createroom',
-                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE),'subdivisions' => $subdivisions]
+                    ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions]
                 );
             }
             if ($request->roomname && $request->roomtype) {
-                $uploadfile= '';
+                $uploadfile = '';
                 // if($request->image['size']>0){
                 //     $uploaddir = '../public/images/';
                 //     $uploadfile = $uploaddir . basename($request->image['name']);
@@ -292,9 +297,9 @@ class Site
                 //         $img = $uploadfile;
                 //     }
                 // }
-               $img = image($request->image)->img($request->image);
-               
-                if (Room::create(['roomname' => $request->roomname, 'roomtype' => $request->roomtype,'subdivision' => $request->subdivision,'image' => $img])) {
+                $img = image($request->image)->img($request->image);
+
+                if (Room::create(['roomname' => $request->roomname, 'roomtype' => $request->roomtype, 'subdivision' => $request->subdivision, 'image' => $img])) {
                     app()->route->redirect('/rooms');
                     return "yes";
                 }
@@ -302,7 +307,7 @@ class Site
             $message = 'Заполните все поля';
         }
 
-        return (new View())->render('site.createroom', ['message' => $message,'subdivisions' => $subdivisions]);
+        return (new View())->render('site.createroom', ['message' => $message, 'subdivisions' => $subdivisions]);
     }
 
     public function addnumbertouser(Request $request): string
@@ -311,13 +316,13 @@ class Site
         $abonents = Abonent::all();
         $numbers = Number::all();
         $message = '';
-        if($request->method === "POST"){
+        if ($request->method === "POST") {
             Number::where('number', $request->number)
-            ->update(['user' => $request->id]);
+                ->update(['user' => $request->id]);
             app()->route->redirect('/abonents');
         }
 
-        return (new View())->render('site.addnumbertouser', ['message' => $message,'abonents' => $abonents, 'numbers'=>$numbers]);
+        return (new View())->render('site.addnumbertouser', ['message' => $message, 'abonents' => $abonents, 'numbers' => $numbers]);
     }
 
     public function new(Request $request): int
