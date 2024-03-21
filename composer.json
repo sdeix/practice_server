@@ -15,7 +15,8 @@
         "illuminate/events": "10.x-dev",
         "nikic/fast-route": "2.0.x-dev",
         "sdeix/collect": "dev-main",
-        "sdeix/image": "dev-main"
+        "sdeix/image": "dev-main",
+        "phpunit/phpunit": "10.0.0"
     },
     "autoload": {
         "psr-4": {

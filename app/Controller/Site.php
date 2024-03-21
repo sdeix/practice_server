@@ -76,6 +76,7 @@ class Site
                         );
                     }
                     if (User::create($request->all())) {
+                        
                         return new View('site.admin', ['message' => "Новый системный администратор создан"]);
                     }
                 }
@@ -241,6 +242,7 @@ class Site
             ]);
 
             if ($validator->fails()) {
+
                 return new View(
                     'site.createsubdivision',
                     ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]
@@ -249,11 +251,15 @@ class Site
             if ($request->subdivisionname && $request->subdivisiontype) {
                 if (Subdivision::create(['subdivisionname' => $request->subdivisionname, 'subdivisiontype' => $request->subdivisiontype])) {
                     app()->route->redirect('/subdivisions');
+                    return "успешно создано";
+
+
                 }
             }
+
             $message = 'Заполните все поля';
         }
-
+ 
         return (new View())->render('site.createsubdivision', ['message' => $message]);
     }
 
@@ -290,6 +296,7 @@ class Site
                
                 if (Room::create(['roomname' => $request->roomname, 'roomtype' => $request->roomtype,'subdivision' => $request->subdivision,'image' => $img])) {
                     app()->route->redirect('/rooms');
+                    return "yes";
                 }
             }
             $message = 'Заполните все поля';
@@ -311,5 +318,12 @@ class Site
         }
 
         return (new View())->render('site.addnumbertouser', ['message' => $message,'abonents' => $abonents, 'numbers'=>$numbers]);
+    }
+
+    public function new(Request $request): int
+    {
+
+
+        return 42;
     }
 }
